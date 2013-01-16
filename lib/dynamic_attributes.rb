@@ -23,7 +23,12 @@ module DynamicAttributes
       
       define_method(self.dynamic_attributes_options[:column_name]) {
          attrs = read_attribute_without_dynamic_attributes self.dynamic_attributes_options[:column_name]
-        attrs.nil? ? nil : YAML.load(attrs.to_query)
+        #attrs.nil? ? nil : YAML.load(attrs).symbolize_keys!
+        begin
+          attrs.nil? ? nil : YAML.load(attrs).symbolize_keys!
+        rescue
+          attrs.nil? ? nil : (attrs)
+        end
       }
       
        class_eval do
